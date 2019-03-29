@@ -116,11 +116,15 @@ def create_post(post_id):
 
 @app.route('/kv-retrieve/<id>', methods=["GET"])
 def get_post(id):
-
+    # Get from database
     post = app.redis.get(id)
     if post:
         data = json.dumps(post.decode('utf-8'))
-    return 
+    return  "input": "new-key",
+            "output": false,
+            "error": "Unable to add pair: key already exists."
+    else:
+        return "False"
 
 
 if _name_= '_main_':

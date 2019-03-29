@@ -2,10 +2,12 @@ from flask import request, jsonify, json, Flask
 import requests
 import os 
 from slackclient import SlackClient
+from redis import redis
+import json
 
 
 app = Flask(__name__)
-
+app.redis = Redis(host="redis", port=6379)
 # NOTE: error handling for letters entered when number expected:
 # try:
 #     float(element)
@@ -112,5 +114,15 @@ def create_post(post_id):
     app.redis.set(post_id, post)
     return "True"
 
-app.debug = False
+@app.route('/kv-retrieve/<id>', methods=["GET"])
+def get_post(id):
+
+    post = app.redis.get(id)
+    if post:
+        data = json.dumps(post.decode('utf-8'))
+    return 
+
+
+if _name_= '_main_':
+app.debug = True
 app.run('0.0.0.0')

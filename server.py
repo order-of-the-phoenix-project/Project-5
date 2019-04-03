@@ -120,11 +120,9 @@ def get_post(id):
     post = app.redis.get(id)
     if post:
         data = json.dumps(post.decode('utf-8'))
-    return  "input": "new-key",
-            "output": false,
-            "error": "Unable to add pair: key already exists."
     else:
-        return "False"
+        data = json.dumps(())
+    return data
 
 
 if _name_= '_main_':

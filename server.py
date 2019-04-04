@@ -2,7 +2,7 @@ from flask import request, jsonify, json, Flask
 import requests
 import os 
 from slackclient import SlackClient
-from redis import redis
+from redis import Redis
 import json
 
 
@@ -100,12 +100,12 @@ def handle_slack(message):
 
 @app.route("/kv-record/<post_id>", methods=["POST"])
 def create_post(post_id):
-
     data = request.data.decode("utf-8")
     data = json.loads(data)
-
+    post = app.redis.get(id)
     app.redis.set(post_id, post)
     return "True"
+
 
 @app.route('/kv-retrieve/<id>', methods=["GET"])
 def get_post(id):

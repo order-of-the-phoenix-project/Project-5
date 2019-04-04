@@ -59,7 +59,7 @@ def fibonacci(num):
 @app.route('/is-prime/<number>')
 def handle_prime(number):
     try:    
-    num = int(number)
+        num = int(number)
         for i in range(2,num):
             if (num % i) == 0:
                 return jsonoutput(str(num) + " is not a prime number")
@@ -98,14 +98,7 @@ def handle_slack(message):
 #    response = #T/F response
 #    jsonoutput(message,response)
 
-@app.route('/posts/<post_id>', methods=["GET"])
-def get_post(post_id):
-
-    post = app.redis.get(post_id).decode('utf-8')
-    return json.dumps(post)
-
-
-@app.route("/posts/<post_id>", methods["POST"])
+@app.route("/kv-record/<post_id>", methods=["POST"])
 def create_post(post_id):
 
     data = request.data.decode("utf-8")
@@ -125,6 +118,6 @@ def get_post(id):
     return data
 
 
-if _name_= '_main_':
-app.debug = True
-app.run('0.0.0.0')
+if __name__== '__main__':
+    app.debug = True
+    app.run('0.0.0.0')

@@ -1,9 +1,26 @@
+"""CLIFAPI
+
+Usage:
+  server.py factorial <num>...
+  server.py slack <message>
+  server.py fibonacci <num>
+  server.py prime <num>
+
+Options:
+  -h --help     Show this screen.
+  --version     Show version.
+
+"""
+
 from flask import request, jsonify, json, Flask
 import requests
 import os 
 from slackclient import SlackClient
 from redis import Redis
 import json
+from Dockopt import Dockopt
+
+
 
 
 app = Flask(__name__)
@@ -25,13 +42,14 @@ def jsonoutput(inp, outp):
     return jsonify(input=inp, output=outp) 
         
 @app.route('/')
+    
 def index():
     return "it works"
 
-# @app.route('/md5/<string>')
-# def handle_md5(string):
-#     h = hashlib.md5(bytes(string, 'utf-8')).hexdigest()
-#     return h
+    # @app.route('/md5/<string>')
+    # def handle_md5(string):
+    #     h = hashlib.md5(bytes(string, 'utf-8')).hexdigest()
+    #     return h
 
 @app.route('/factorial/<num>')
 def handle_factorial(num):
@@ -109,14 +127,22 @@ def create_post(post_id):
 
 @app.route('/kv-retrieve/<id>', methods=["GET"])
 def get_post(id):
-    # Get from database
-    post = app.redis.get(id)
-    if post:
-        data = json.dumps(post.decode('utf-8'))
-    else:
-        data = json.dumps(())
-    return data
+        # Get from database
+        post = app.redis.get(id)
+        if post:
+            data = json.dumps(post.decode('utf-8'))
+        else:
+            data = json.dumps(())
+        return data
 
+def run():
+
+    args = docopt(__doc__, version="0.1.0")
+    if args['factorial']:
+        handle_factorial()
+
+if __name__ == '__main__':
+        run()
 
 if __name__== '__main__':
     app.debug = True

@@ -100,10 +100,9 @@ def handle_slack(message):
 
 @app.route("/kv-record/<post_id>", methods=["POST"])
 def create_post(post_id):
-    data = request.data.decode("utf-8")
-    data = json.loads(data)
-    post = app.redis.get(id)
-    app.redis.set(post_id, post)
+    data = post_id.data.decode("utf-8")
+    post = json.loads(data)
+    app.redis.set(post_id, json.dumps(post))
     return "True"
 
 

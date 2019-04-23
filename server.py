@@ -1,4 +1,4 @@
-"""CLIFAPI
+"""server.py
 
 Usage:
   server.py factorial <num>...
@@ -18,8 +18,13 @@ import os
 from slackclient import SlackClient
 from redis import Redis
 import json
-from Dockopt import Dockopt
+from docopt import docopt
 
+def run():
+
+    args = docopt(__doc__, version="0.1.0")
+    if args['factorial']:
+        handle_factorial('<num>')
 
 
 
@@ -80,10 +85,10 @@ def handle_prime(number):
         num = int(number)
         for i in range(2,num):
             if (num % i) == 0:
-                return jsonoutput(str(num) + " is not a prime number")
+                return jsonoutput(number, str(num) + " is not a prime number")
                 break
             else:
-                return jsonoutput(str(num) + " is a prime number")
+                return jsonoutput(number, str(num) + " is a prime number")
     except ValueError:
         return jsonoutput(num, "Input is not a positive integer")
 
@@ -134,12 +139,6 @@ def get_post(id):
         else:
             data = json.dumps(())
         return data
-
-def run():
-
-    args = docopt(__doc__, version="0.1.0")
-    if args['factorial']:
-        handle_factorial()
 
 if __name__ == '__main__':
         run()

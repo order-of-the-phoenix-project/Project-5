@@ -100,10 +100,10 @@ def handle_slack(message):
 
 @app.route("/kv-record/<post_id>", methods=["POST"])
 def create_post(post_id):
-    data = post_id.data.decode("utf-8")
+    data = post_id
     post = json.loads(data)
     app.redis.set(post_id, json.dumps(post))
-    return "True"
+    return data
 
 
 @app.route('/kv-retrieve/<id>', methods=["GET"])
@@ -118,5 +118,5 @@ def get_post(id):
 
 
 if __name__== '__main__':
-    app.debug = True
+    app.debug = False
     app.run('0.0.0.0')

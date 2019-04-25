@@ -34,7 +34,7 @@ test = requests.post("http://localhost:5000"+database[0], data="Working!")
 print("Testing: "+database[0])
 assert test.text == "True"
 test = requests.get("http://localhost:5000"+database[1]).json()
-print("Testing: "+database[1]
+print("Testing: "+database[1])
 assert str(test['output']) == "Working!"
 
 

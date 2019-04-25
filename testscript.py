@@ -21,9 +21,11 @@ while True:
         print('Connected!')
         break
     except:
+        print('Waiting for connection...')
         time.sleep(.5)
 
 for x in data:
+    print("Testing: "+str(x))
     runtest(x)
 
 

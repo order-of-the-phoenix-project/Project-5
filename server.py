@@ -80,7 +80,7 @@ def handle_prime(number):
 @app.route('/slack/<message>')
 def handle_slack(message):
     requests.post("https://hooks.slack.com/services/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", json={"text": message})#data='\'\"text\":\"'+message+'\"\'')
-    return jsonify(message = True)
+    return jsonify(input = message, output = True)
     # slackurl = "https://hooks.slack.com/services/TFCTWE2SH/BGMFM5AAG/G8ENlXUDl6A68"
 
     # payload = {"text": str(message), "channel": "#ootpp"}

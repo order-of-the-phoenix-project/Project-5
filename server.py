@@ -102,17 +102,17 @@ def handle_slack(message):
 def create_post(post_id):
     boolean = True
     Emessage = ''
-    Emessages = ("None","Unabke to add pair: Key already exists.", "Unable to add pair.")
+    Emessages = ("None","Unable to add pair: Key already exists.", "Unable to add pair. Improper format.")
     data = request.data.decode('utf-8')
     try:
         Emessage = Emessages[0]
         post = json.loads(data)
     except KeyError:
         boolean = False
-        Emessage = Emessages[2]
+        Emessage = Emessages[1]
     except ValueError:
         boolean = False
-        Emessage = Emessages[1]
+        Emessage = Emessages[2]
     app.redis.set(post_id, json.dumps(data))
     return ("Input :" + data + 
     "\nOutput : " + str(boolean) + 
@@ -123,11 +123,23 @@ def create_post(post_id):
 def get_post(id):
     # Get from database
     post = app.redis.get(id)
-    if post:
-        data = json.dumps(post.decode('utf-8'))
-    else:
-        data = json.dumps(())
-    return data
+    output = ''
+    Emessage = ''
+    Emessages = ("None","Unable to retrieve the pair. No matching Value", "Unable to retrieve the pair. Improper format.")
+    try:    
+        if post:
+            data = json.dumps(post.decode('utf-8'))
+        else:
+            data = json.dumps(id)
+    except KeyError:
+        Emessage = Emessages[1]
+    except ValueError:
+        Emessage = Emessages[2]
+    for char in data:
+        data.replace("\\",'')
+    return ("Input :" + str(id) + 
+    "\nOutput : " + data + 
+    "\nerror : " + Emessage)
 
 
 if __name__== '__main__':

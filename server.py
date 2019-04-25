@@ -1,5 +1,5 @@
 from flask import request, jsonify, json, Flask
-import requests
+import requests, hashlib
 import os 
 from slackclient import SlackClient
 from redis import Redis
@@ -26,12 +26,12 @@ def jsonoutput(inp, outp):
         
 @app.route('/')
 def index():
-    return "it works"
+    return "True"
 
-# @app.route('/md5/<string>')
-# def handle_md5(string):
-#     h = hashlib.md5(bytes(string, 'utf-8')).hexdigest()
-#     return h
+@app.route('/md5/<string>')
+def handle_md5(string):
+    h = hashlib.md5(bytes(string, 'utf-8')).hexdigest()
+    return jsonoutput(string, h)
 
 @app.route('/factorial/<num>')
 def handle_factorial(num):

@@ -1,7 +1,7 @@
 """server.py
 
 Usage:
-  server.py factorial <num>...
+  server.py factorial <num>
   server.py slack <message>
   server.py fibonacci <num>
   server.py prime <num>
@@ -20,11 +20,7 @@ from redis import Redis
 import json
 from docopt import docopt
 
-def run():
 
-    args = docopt(__doc__, version="0.1.0")
-    if args['factorial']:
-        handle_factorial('<num>')
 
 
 
@@ -45,18 +41,7 @@ app.redis = Redis(host="redis", port=6379)
 
 def jsonoutput(inp, outp):
     return jsonify(input=inp, output=outp) 
-        
-@app.route('/')
-    
-def index():
-    return "it works"
 
-    # @app.route('/md5/<string>')
-    # def handle_md5(string):
-    #     h = hashlib.md5(bytes(string, 'utf-8')).hexdigest()
-    #     return h
-
-@app.route('/factorial/<num>')
 def handle_factorial(num):
     try:
         use = int(num)
@@ -68,6 +53,22 @@ def handle_factorial(num):
         #return str(total)
     except ValueError:
         return jsonoutput(num, "Input is not a positive integer")
+        
+@app.route('/')
+    
+def index():
+    return "it works"
+
+    # @app.route('/md5/<string>')
+    # def handle_md5(string):
+    #     h = hashlib.md5(bytes(string, 'utf-8')).hexdigest()
+    #     return h
+
+
+
+@app.route('/factorial/<num>')
+def factorial(num):
+    handle_factorial(num)
 
 @app.route('/fibonacci/<num>')
 def fibonacci(num):
@@ -140,8 +141,45 @@ def get_post(id):
             data = json.dumps(())
         return data
 
-if __name__ == '__main__':
+def create_app():
+    app = Flask(__name__)
+
+    with app.app_context():
         run()
+
+    return app
+
+def run():
+
+    args = docopt(__doc__, version="0.1.0")
+    if args['factorial']:
+        ans = handle_factorial(args['<num>'])
+        print(ans.data)
+
+    if args['slack']:
+        ans = handle_slack(args['<message>'])
+        print(ans.data)
+    
+    if args['fibonacci']:
+        ans = fibonacci(args['<num>'])
+        print(ans.data)
+
+    if args['prime']:
+        ans = handle_prime('<num>')
+        print(ans.data)
+        
+    # if args['kvget']:
+    #     ans = get_post()
+    #     print(ans.data)
+
+    # if args['kvpost']:
+    #     ans = create_post()
+    #     print(ans.data)
+
+    
+
+if __name__ == '__main__':
+        create_app()
 
 if __name__== '__main__':
     app.debug = True

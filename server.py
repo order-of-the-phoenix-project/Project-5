@@ -63,7 +63,7 @@ def handle_prime(number):
         for i in range(2,num):
             if (num % i) == 0:
                 return jsonoutput(num, str(num) + " is not a prime number")
-                break
+                #break
             else:
                 return jsonoutput(num, str(num) + " is a prime number")
     except ValueError:
@@ -100,10 +100,23 @@ def handle_slack(message):
 
 @app.route("/kv-record/<post_id>", methods=["POST"])
 def create_post(post_id):
+    boolean = True
+    Emessage = ''
+    Emessages = ("None","Unabke to add pair: Key already exists.", "Unable to add pair.")
     data = request.data.decode('utf-8')
-    post = json.loads(data)
+    try:
+        Emessage = Emessages[0]
+        post = json.loads(data)
+    except KeyError:
+        boolean = False
+        Emessage = Emessages[2]
+    except ValueError:
+        boolean = False
+        Emessage = Emessages[1]
     app.redis.set(post_id, json.dumps(data))
-    return "True"
+    return ("Input :" + data + 
+    "\nOutput : " + str(boolean) + 
+    "\nerror : " + Emessage)
 
 
 @app.route('/kv-retrieve/<id>', methods=["GET"])

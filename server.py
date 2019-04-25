@@ -23,7 +23,6 @@ from docopt import docopt
 
 
 
-
 app = Flask(__name__)
 app.redis = Redis(host="redis", port=6379)
 # NOTE: error handling for letters entered when number expected:
@@ -53,7 +52,16 @@ def handle_factorial(num):
         #return str(total)
     except ValueError:
         return jsonoutput(num, "Input is not a positive integer")
-        
+
+def handle_fibonacci(num):
+    a = 0
+    b = 1
+    fibo = [a]
+    while b <= int(num):
+        fibo.append(b)
+        a, b = b, a+b
+    return jsonoutput(int(num), fibo)
+
 @app.route('/')
     
 def index():
@@ -72,13 +80,7 @@ def factorial(num):
 
 @app.route('/fibonacci/<num>')
 def fibonacci(num):
-    a = 0
-    b = 1
-    fibo = [a]
-    while b <= int(num):
-        fibo.append(b)
-        a, b = b, a+b
-    return jsonoutput(int(num), fibo)    
+    handle_fibonacci(num)  
 
 @app.route('/is-prime/<number>')
 def handle_prime(number):
@@ -150,24 +152,30 @@ def create_app():
     return app
 
 def run():
-
+    cli = False
+    print(cli)
     args = docopt(__doc__, version="0.1.0")
+    print(args)
     if args['factorial']:
         ans = handle_factorial(args['<num>'])
         print(ans.data)
-
+        cli = True
+    print(cli)
     if args['slack']:
         ans = handle_slack(args['<message>'])
         print(ans.data)
+        cli = True
     
     if args['fibonacci']:
-        ans = fibonacci(args['<num>'])
+        ans = handle_fibonacci(args['<num>'])
         print(ans.data)
+        cli = True
 
     if args['prime']:
         ans = handle_prime('<num>')
         print(ans.data)
-        
+        cli = True
+    
     # if args['kvget']:
     #     ans = get_post()
     #     print(ans.data)
@@ -175,12 +183,14 @@ def run():
     # if args['kvpost']:
     #     ans = create_post()
     #     print(ans.data)
+   
+    if ((__name__== '__main__') and (cli == False)):
+        app.debug = False
+        app.run('0.0.0.0')
 
     
 
 if __name__ == '__main__':
         create_app()
+    
 
-if __name__== '__main__':
-    app.debug = True
-    app.run('0.0.0.0')

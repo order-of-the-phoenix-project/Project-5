@@ -5,7 +5,7 @@ data = {
         "/factorial/10":"3628800",
         "/fibonacci/10":"[0, 1, 1, 2, 3, 5, 8]",
         "/is-prime/233":"233 is a prime number",
-        #"/slack/Automated-test.":"True"
+        "/slack/Automated-test.":"True"
 }
 database = [
         "/kv-record/automatedtest",

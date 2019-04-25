@@ -114,7 +114,7 @@ def create_post(post_id):
     #     Emessage = Emessages[1]
     #     return jsonify(input=post_id, output=False, error=Emessages[1])
     if request.method == 'PUT':
-        app.redis.set(post_id, str("{\n"+"\"input\"=\""+post_id+"\",\n"+"\"output\"=\""+data+"\",\n"+"\"error\"=\"None\"\n}"))
+        app.redis.set(post_id, str("{\n"+"\"input\":\""+post_id+"\",\n"+"\"output\":\""+data+"\",\n"+"\"error\":\"None\"\n}"))
         return "True"
 # Apparently, using jsonify does weird stuff when it puts information in Redis, and when you attempt to retrieve the data, you get something along the lines of "<Response [200]>"
     elif request.method == 'POST':
@@ -122,7 +122,7 @@ def create_post(post_id):
             if app.redis.exists(post_id):
                 return jsonify(input=post_id, output="False", error="Unable to add pair: Key already exists.")
             else:
-                app.redis.set(post_id, str("{\n"+"\"input\"=\""+post_id+"\",\n"+"\"output\"=\""+data+"\",\n"+"\"error\"=\"None\"\n}"))
+                app.redis.set(post_id, str("{\n"+"\"input\":\""+post_id+"\",\n"+"\"output\":\""+data+"\",\n"+"\"error\":\"None\"\n}"))
                 return "True"
 
         except ValueError:

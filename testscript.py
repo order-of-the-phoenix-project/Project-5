@@ -5,10 +5,12 @@ data = {
         "/factorial/10":"3628800",
         "/fibonacci/10":"[0, 1, 1, 2, 3, 5, 8]",
         "/is-prime/233":"233 is a prime number",
-        "/slack/Automated-test.":"True",
-        "/kv-record/automatedtest":"True",
-        "/kv-retrieve/automatedtest":"Working!"
-        } 
+        #"/slack/Automated-test.":"True"
+}
+database = [
+        "/kv-record/automatedtest",
+        "/kv-retrieve/automatedtest"
+]
 
 def runtest(inp):
     test = requests.get("http://localhost:5000"+inp).json()
@@ -27,6 +29,13 @@ while True:
 for x in data:
     print("Testing: "+str(x))
     runtest(x)
+
+test = requests.post("http://localhost:5000"+database[0], data="Working!")
+print("Testing: "+database[0])
+assert test.text == "True"
+test = requests.get("http://localhost:5000"+database[1]).json()
+print("Testing: "+database[1]
+assert str(test['output']) == "Working!"
 
 
 # def runtest(inp):

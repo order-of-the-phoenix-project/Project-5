@@ -11,11 +11,8 @@ data = {
         } 
 
 def runtest(inp):
-    try:
-        test = requests.get("http://localhost:5000"+inp).json()
-        assert str(test['output']) == str(data[inp])
-    except:
-        raise Exception(str(inp)+" FAILED, Site error: "+str(requests.get("http://localhost:5000"+inp)))
+    test = requests.get("http://localhost:5000"+inp).json()
+    assert str(test['output']) == str(data[inp])
 
 
 while True:

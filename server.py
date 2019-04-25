@@ -77,7 +77,7 @@ def handle_prime(number):
 #     return str(use)
 
 ##Should be most of the slack alert API
-@app.route('/slack/<message>')
+@app.route('/slack-alert/<message>')
 def handle_slack(message):
     requests.post("https://hooks.slack.com/services/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", json={"text": message})#data='\'\"text\":\"'+message+'\"\'')
     return jsonify(input = message, output = True)

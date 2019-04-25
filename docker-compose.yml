@@ -1,6 +1,7 @@
 version: '3'
 services:
   web:
+    image: project-5:latest
     build: . 
     ports:
     - "5000:5000"

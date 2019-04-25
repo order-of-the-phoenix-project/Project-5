@@ -5,6 +5,8 @@ Usage:
   server.py slack <message>
   server.py fibonacci <num>
   server.py prime <num>
+  server.py kv-record <key> <value>
+  server.py kv-retrieve <key>
   
 Options:
   -h --help     Show this screen.
@@ -14,7 +16,10 @@ Options:
 from docopt import docopt
 import requests
 
-def sendinfo(type, info):
+def sendinfo(type, info): #add info2
+    #if info 2 exists:
+    #requests.post
+    #else
     return requests.get("http://localhost:5000/"+type+"/"+info).json()['output']
 
 
@@ -31,6 +36,10 @@ def run():
         print(sendinfo('fibonacci', args['<num>']))
     if args['prime']:
         print(sendinfo('is-prime', args['<num>']))
+    # if args['kv-record']:
+    #     print(sendinfo('kv-record', args['<key>'], args['<value>']))
+    if args['kv-retrieve']:
+        print(sendinfo('kv-retrieve', args['<key>']))
 
 if __name__ == "__main__":
     run()

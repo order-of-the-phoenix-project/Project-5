@@ -129,8 +129,10 @@ def get_post(id):
     try:    
         if post:
             data = json.dumps(post.decode('utf-8'))
+            Emessage = Emessages[0]
         else:
             data = json.dumps(id)
+            Emessage = Emessages[0]
     except KeyError:
         Emessage = Emessages[1]
     except ValueError:

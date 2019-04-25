@@ -1,4 +1,4 @@
-from flask import request, jsonify, json, Flask
+from flask import request, jsonify, json, Flask, Response
 import requests, hashlib
 import os 
 from slackclient import SlackClient
@@ -98,36 +98,53 @@ def handle_slack(message):
 #    response = #T/F response
 #    jsonoutput(message,response)
 
-@app.route("/kv-record/<post_id>", methods=["POST"])
+@app.route("/kv-record/<post_id>", methods=["POST","PUT"])
 def create_post(post_id):
-    boolean = True
-    Emessage = ''
-    Emessages = ("None","Unabke to add pair: Key already exists.", "Unable to add pair.")
     data = request.data.decode('utf-8')
-    try:
-        Emessage = Emessages[0]
-        post = json.loads(data)
-    except KeyError:
-        boolean = False
-        Emessage = Emessages[2]
-    except ValueError:
-        boolean = False
-        Emessage = Emessages[1]
-    app.redis.set(post_id, json.dumps(data))
-    return ("Input :" + data + 
-    "\nOutput : " + str(boolean) + 
-    "\nerror : " + Emessage)
+    # try:
+    #     Emessage = Emessages[0]
+    #     json.loads(data)
+    #     return jsonify(input=post_id, output=data, error=Emessages[0])
+    # except KeyError:
+    #     boolean = False
+    #     Emessage = Emessages[2]
+    #     return jsonify(input=post_id, output=False, error=Emessages[2])
+    # except ValueError:
+    #     boolean = False
+    #     Emessage = Emessages[1]
+    #     return jsonify(input=post_id, output=False, error=Emessages[1])
+    if request.method == 'PUT':
+        app.redis.set(post_id, str("{\n"+"\"input\"=\""+post_id+"\",\n"+"\"output\"=\""+data+"\",\n"+"\"error\"=\"None\"\n}"))
+        return "True"
+# Apparently, using jsonify does weird stuff when it puts information in Redis, and when you attempt to retrieve the data, you get something along the lines of "<Response [200]>"
+    elif request.method == 'POST':
+        try:
+            if app.redis.exists(post_id):
+                return jsonify(input=post_id, output="False", error="Unable to add pair: Key already exists.")
+            else:
+                app.redis.set(post_id, str("{\n"+"\"input\"=\""+post_id+"\",\n"+"\"output\"=\""+data+"\",\n"+"\"error\"=\"None\"\n}"))
+                return "True"
+
+        except ValueError:
+            return "Unable to add pair: Key already exists."
+        except KeyError:
+            return "Unable to add pair"
 
 
 @app.route('/kv-retrieve/<id>', methods=["GET"])
 def get_post(id):
     # Get from database
-    post = app.redis.get(id)
-    if post:
-        data = json.dumps(post.decode('utf-8'))
-    else:
-        data = json.dumps(())
-    return data
+    try:
+        post = app.redis.get(id)
+        return post.decode('utf-8')
+    except AttributeError:
+        return "Key does not exist"
+
+    # if post:
+    #     data = json.dumps(post.decode('utf-8'))
+    # else:
+    #     data = False
+    # return data
 
 
 if __name__== '__main__':

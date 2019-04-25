@@ -1,4 +1,4 @@
-import requests, json
+import requests, json, time
 
 data = {
         "/md5/thisisatest":"f830f69d23b8224b512a0dc2f5aec974",
@@ -18,12 +18,17 @@ def runtest(inp):
         raise Exception(str(inp)+" FAILED, Site error: "+str(requests.get("http://localhost:5000"+inp)))
 
 
-while requests.get("http://localhost:5000/") != "True":
-    sleep(.5)
+while True:
+    try:
+        requests.get("http://localhost:5000/")
+        print('Connected!')
+        break
+    except:
+        time.sleep(.5)
 
 for x in data:
-    t = runtest(x)
-    print(t)
+    runtest(x)
+
 
 # def runtest(inp):
 #     try:
